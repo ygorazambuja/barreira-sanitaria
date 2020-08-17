@@ -98,6 +98,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         exitForecast
         id
         occurrenceDate
+        isFinalized
       }
     }
     """;
@@ -158,5 +159,21 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
       registers.add(CleanRegisterDto.fromMap(registerJson));
     }
     return registers;
+  }
+
+  @override
+  Future<int> finalizeRegister(String _eq) async {
+    final query = """
+    mutation MyMutation(\$_eq: uuid) {
+      update_registers(where: {id: {_eq: \$_eq}}, _set: {isFinalized: true}) {
+        affected_rows
+      } 
+    }
+    """;
+    final response =
+        await hasuraConnect.mutation(query, variables: {'_eq': _eq});
+    final int affectedRows =
+        response['data']['update_registers']['affected_rows'];
+    return affectedRows;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../domain/entities/person.dart';
 import '../components/title_top.dart';
@@ -19,6 +20,11 @@ class NewPassengerScreen extends StatefulWidget {
 class _NewPassengerScreenState extends State<NewPassengerScreen> {
   bool _passengerTravelerController = false;
 
+  MaskTextInputFormatter cpfFormatter = MaskTextInputFormatter(
+      mask: '###.###.###-##', filter: {'#': RegExp(r'[0-9]')});
+  MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
+      mask: '(##)-#####-####', filter: {'#': RegExp(r'[0-9]')});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +40,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
         child: Column(
           children: [
             TitleTop(
-              title: 'Novo Passageiro',
+              title: 'Nova Pessoa',
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,6 +59,8 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                inputFormatters: [cpfFormatter],
+                keyboardType: TextInputType.number,
                 onChanged: (value) => setState(() {
                   widget.person.cpf = value;
                 }),
@@ -68,8 +76,10 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 onChanged: (value) =>
                     setState(() => widget.person.phone = value),
+                inputFormatters: [phoneFormatter],
                 decoration: InputDecoration(
                     labelText: 'Telefone',
                     border: OutlineInputBorder(

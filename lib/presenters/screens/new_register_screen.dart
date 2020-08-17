@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../domain/entities/person.dart';
 import '../../shared/custom_bottom_app_bar.dart';
@@ -16,6 +17,14 @@ class NewRegisterScreen extends StatefulWidget {
 class _NewRegisterScreenState extends State<NewRegisterScreen> {
   final _placaController = TextEditingController();
   final _dateTimeController = TextEditingController();
+
+  final MaskTextInputFormatter cpfFormatter = MaskTextInputFormatter(
+      mask: '###.###.###-##', filter: {'#': RegExp(r'[0-9]')});
+  final MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
+      mask: '(##)-#####-####', filter: {'#': RegExp(r'[0-9]')});
+
+  final MaskTextInputFormatter plateFormatter = MaskTextInputFormatter(
+      mask: '###-####', filter: {'#': RegExp(r'([aA-Z]{0,3})([0-9]{0,})')});
 
   bool _isViajante = false;
 
@@ -58,7 +67,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -66,17 +75,22 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                             child: TextFormField(
                                 decoration: InputDecoration(
                                     labelText: 'Placa do Carro: ',
-                                    border: OutlineInputBorder()),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        gapPadding: 2)),
                                 controller: _placaController,
-                                maxLength: 7,
+                                maxLength: 8,
                                 textCapitalization:
                                     TextCapitalization.characters,
-                                inputFormatters: [UpperCaseTextFormatter()],
+                                inputFormatters: [
+                                  UpperCaseTextFormatter(),
+                                  plateFormatter
+                                ],
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return "Campo não pode ser vazio";
                                   }
-                                  if (value.length != 7) {
+                                  if (value.length != 8) {
                                     return 'Placa precisa ter 7 Caracteres';
                                   }
                                   return null;
@@ -103,62 +117,53 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                       ),
                     ),
                     _isViajante
-                        ? Column(
-                            children: [
-                              Text('Estipular Horario para Saida'),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: DateTimePicker(
-                                  controller: _dateTimeController,
-                                  type: DateTimePickerType.dateTimeSeparate,
-                                  dateMask: 'd MMM yyyy',
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime(2021),
-                                  dateLabelText: 'Data',
-                                  timeLabelText: 'Horário',
-                                  onChanged: (value) => print,
+                        ? Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white30),
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Text('Estipular Horario para Saida'),
+                                Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: DateTimePicker(
+                                    controller: _dateTimeController,
+                                    type: DateTimePickerType.dateTimeSeparate,
+                                    dateMask: 'dd/MM/yyyy',
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2021),
+                                    dateLabelText: 'Data',
+                                    timeLabelText: 'Horário',
+                                    onChanged: (value) => print,
+                                    use24HourFormat: true,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           )
                         : Container(),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
-                          decoration:
-                              InputDecoration(labelText: "Modelo do carro")),
+                          decoration: InputDecoration(
+                              labelText: "Modelo do carro",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gapPadding: 2))),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
-                          decoration:
-                              InputDecoration(labelText: "Nome Completo")),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                    labelText: "Cpf do Motorista")),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextFormField(
-                              decoration:
-                                  InputDecoration(labelText: "Telefone"),
-                            ),
-                          ),
-                        ),
-                      ],
+                        decoration: InputDecoration(
+                            labelText: 'Motivos da Visita',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                gapPadding: 2)),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: RaisedButton.icon(
                           onPressed: () async {
                             var person = await Navigator.push(
@@ -173,7 +178,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                             }
                           },
                           icon: Icon(Icons.add),
-                          label: Text('Adicionar Passageiro')),
+                          label: Text('Adicionar Pessoa')),
                     ),
                     passengers.isNotEmpty
                         ? PassengerListRender(

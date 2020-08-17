@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   hasura_connect: 1.2.2+1
   uuid: 2.2.0
@@ -32,6 +34,7 @@ dependencies:
   date_time_picker: ^1.0.0
   icon_picker: ^1.0.0
   dartz: 0.9.1
+  mask_text_input_formatter: 1.0.7
 
 dev_dependencies:
   flutter_test:

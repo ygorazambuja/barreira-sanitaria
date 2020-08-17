@@ -10,4 +10,6 @@ abstract class RegisterRepositoryAbstract {
 
   Future<List<CleanRegisterDto>> fetchFinalizedCleanRegistersDto();
   Future<List<CleanRegisterDto>> fetchNonFinalizedCleanRegistersDto();
+
+  Future<int> finalizeRegister(String id);
 }

@@ -29,6 +29,9 @@ class RegisterCard extends StatelessWidget {
             ));
       },
       child: Card(
+        color: register.isFinalized
+            ? Colors.green.withOpacity(0.1)
+            : Colors.red.withOpacity(0.1),
         elevation: 9,
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -45,29 +48,13 @@ class RegisterCard extends StatelessWidget {
                     children: [
                       Text("Data: ",
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
-                          .format(occurrenceDate.toUtc()))
-                    ],
-                  )),
-              if (register.exitForecast != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Horário de Saida ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
                       Text(DateFormat(DateFormat.HOUR24_MINUTE)
-                          .format(exitForecast)),
-                      Text(' de ' +
+                          .format(occurrenceDate)),
+                      Text(' ás ' +
                           DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
                               .format(occurrenceDate))
                     ],
-                  ),
-                )
-              else
-                Container()
+                  )),
             ],
           ),
         ),

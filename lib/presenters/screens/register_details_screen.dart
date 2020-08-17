@@ -48,8 +48,9 @@ class RegisterDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40),
                   child: Text('Detalhes do Registro',
-                      style:
-                          TextStyle(fontSize: 34, fontWeight: FontWeight.w300)),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.08,
+                          fontWeight: FontWeight.w300)),
                 ),
               ],
             ),
@@ -183,9 +184,8 @@ class _RegisterDetails extends StatelessWidget {
 }
 
 class FinalizedButtonStatus extends StatelessWidget {
-  const FinalizedButtonStatus({
-    Key key,
-  }) : super(key: key);
+  final String registerId;
+  const FinalizedButtonStatus({Key key, this.registerId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +215,9 @@ class FinalizedButtonStatus extends StatelessWidget {
                           icon: Icon(Icons.done),
                           label: Text("Sim"),
                           onPressed: () {
-                            Navigator.pop(context);
+                            RegisterRepositoryImplementation()
+                                .finalizeRegister(registerId);
+                            Navigator.pushNamed(context, '/');
                           },
                         ),
                         RaisedButton.icon(

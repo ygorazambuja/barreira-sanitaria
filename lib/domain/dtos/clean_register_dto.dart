@@ -5,11 +5,13 @@ class CleanRegisterDto extends Register {
   String id;
   DateTime exitForecast;
   DateTime occurrenceDate;
+  bool isFinalized;
 
   CleanRegisterDto({
     this.carPlate,
     this.id,
     this.exitForecast,
+    this.isFinalized,
     this.occurrenceDate,
   });
 
@@ -19,6 +21,7 @@ class CleanRegisterDto extends Register {
       'id': id,
       'exitForecast': exitForecast?.millisecondsSinceEpoch,
       'occurrenceDate': occurrenceDate?.millisecondsSinceEpoch,
+      'isFinalized': isFinalized
     };
   }
 
@@ -26,14 +29,14 @@ class CleanRegisterDto extends Register {
     if (map == null) return null;
 
     return CleanRegisterDto(
-      carPlate: map['carPlate'],
-      id: map['id'],
-      exitForecast: map['exitForecast'] != null
-          ? DateTime.parse(map['exitForecast'])
-          : null,
-      occurrenceDate: map['occurrenceDate'] != null
-          ? DateTime.parse(map['occurrenceDate'])
-          : null,
-    );
+        carPlate: map['carPlate'],
+        id: map['id'],
+        exitForecast: map['exitForecast'] != null
+            ? DateTime.parse(map['exitForecast'])
+            : null,
+        occurrenceDate: map['occurrenceDate'] != null
+            ? DateTime.parse(map['occurrenceDate'])
+            : null,
+        isFinalized: map['isFinalized']);
   }
 }

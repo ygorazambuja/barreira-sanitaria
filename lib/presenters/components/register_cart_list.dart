@@ -19,21 +19,31 @@ class RegisterCardListBuilder extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
+        } else if (snapshot.hasData) {
+          if (snapshot.data.length > 0) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                final register = snapshot.data[index];
+                final occurrenceDate = register.occurrenceDate;
+                final exitForecast = register.exitForecast;
+                initializeDateFormatting('pt_BR', null);
+                return RegisterCard(
+                    register: register,
+                    occurrenceDate: occurrenceDate,
+                    exitForecast: exitForecast);
+              },
+            );
+          } else {
+            return Center(
+              child: Text('Não tem registros sem baixa'),
+            );
+          }
+        } else if (snapshot.hasError) {
+          return Text('Houve Algum Erro');
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              final register = snapshot.data[index];
-              final occurrenceDate = register.occurrenceDate;
-              final exitForecast = register.exitForecast;
-              initializeDateFormatting('pt_BR', null);
-              return RegisterCard(
-                  register: register,
-                  occurrenceDate: occurrenceDate,
-                  exitForecast: exitForecast);
-            },
-          );
+          return Text('Erro Inesperado');
         }
       },
     );
