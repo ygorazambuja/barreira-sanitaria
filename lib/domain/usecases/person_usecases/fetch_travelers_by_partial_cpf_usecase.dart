@@ -1,12 +1,14 @@
 import '../../../repository/abstract/person_repository_abstract.dart';
+
 import '../../entities/person.dart';
 
-class FetchPersonByPartialCpfUsecase {
+class FetchTravelersByPartialCpfUsecase {
   final PersonRepositoryAbstract repository;
   final String cpf;
-  FetchPersonByPartialCpfUsecase({this.repository, this.cpf});
+
+  FetchTravelersByPartialCpfUsecase({this.cpf, this.repository});
 
   Future<List<Person>> call() async {
-    return await repository.findPersonByPartialCpf(cpf);
+    return await repository.findTravelerByPartialCpf(cpf);
   }
 }

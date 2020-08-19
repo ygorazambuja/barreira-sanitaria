@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../repository/abstract/register_repository_abstract.dart';
+import '../../../infra/repositories/implementation/register_repository_implementation.dart';
 import '../../entities/registers.dart';
 
 class NewRegisterUseCase {
-  Register register;
+  final Register register;
+  final RegisterRepositoryImplementation repository;
 
   NewRegisterUseCase({
     @required this.register,
+    @required this.repository,
   });
 
-  void call(RegisterRepositoryAbstract repository) {
-    repository.newRegister(register);
+  Future<String> call() async {
+    return await repository.newRegister(register);
   }
 }

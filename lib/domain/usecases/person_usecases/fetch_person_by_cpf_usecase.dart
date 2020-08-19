@@ -7,6 +7,6 @@ class FetchPersonByCpf {
   FetchPersonByCpf({this.repository, this.cpf});
 
   Future<Person> call() async {
-    await repository.getPersonByCpf(cpf);
+    return await repository.getPersonByCpf(cpf);
   }
 }

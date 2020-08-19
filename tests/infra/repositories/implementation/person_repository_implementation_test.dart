@@ -1,5 +1,5 @@
 import 'package:barreira_sanitaria/domain/entities/person.dart';
-import 'package:barreira_sanitaria/infra/repositories/implementation/person_respository_implementation.dart';
+import 'package:barreira_sanitaria/infra/repositories/implementation/person_repository_implementation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

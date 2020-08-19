@@ -1,14 +1,13 @@
-import 'package:barreira_sanitaria/domain/entities/person.dart';
-import 'package:barreira_sanitaria/domain/usecases/person_usecases/fetch_person_by_cpf_usecase.dart';
-import 'package:barreira_sanitaria/domain/usecases/person_usecases/fetch_person_by_partial_cpf_usecase.dart';
-import 'package:barreira_sanitaria/infra/repositories/implementation/person_respository_implementation.dart';
-import 'package:barreira_sanitaria/presenters/components/title_top.dart';
-import 'package:barreira_sanitaria/presenters/screens/person_details_screen.dart';
 import 'package:flutter/material.dart';
 
+import "../../domain/entities/person.dart";
+import '../../domain/usecases/person_usecases/fetch_travelers_by_partial_cpf_usecase.dart';
+import '../../infra/repositories/implementation/person_repository_implementation.dart';
 import '../../shared/custom_bottom_app_bar.dart';
 import '../../shared/rectangle_floating_action_button.dart';
 import '../../shared/shared_main_drawer.dart';
+import '../components/title_top.dart';
+import 'person_details_screen.dart';
 
 class OutsidersScreen extends StatefulWidget {
   @override
@@ -66,10 +65,10 @@ class __BodyState extends State<_Body> {
               ),
             ),
           ),
-          Container(
+          Expanded(
             child: cpf.isNotEmpty
                 ? FutureBuilder<List<Person>>(
-                    future: FetchPersonByPartialCpfUsecase(
+                    future: FetchTravelersByPartialCpfUsecase(
                         cpf: cpf,
                         repository: PersonRepositoryImplementation())(),
                     builder: (context, snapshot) {

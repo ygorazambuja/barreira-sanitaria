@@ -1,7 +1,7 @@
-import 'package:barreira_sanitaria/presenters/screens/outsiders_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../presenters/screens/new_register_screen.dart';
+import '../presenters/screens/outsiders_screen.dart';
 import '../presenters/screens/registers_finalized_screen.dart';
 import '../presenters/screens/registers_non_finalized_screen.dart';
 import 'list_tile_drawer_item.dart';

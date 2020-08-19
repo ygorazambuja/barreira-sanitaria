@@ -10,6 +10,7 @@ class Register {
   DateTime occurrenceDate;
   List<Person> persons;
   bool isFinalized;
+  String reason;
 
   Register(
       {@required this.id,
@@ -17,13 +18,17 @@ class Register {
       @required this.exitForecast,
       @required this.occurrenceDate,
       @required this.isFinalized,
+      this.reason,
       this.persons});
 
   @override
   String toString() {
-    return "Id: $id, \nexitForecast: $exitForecast,"
+    return "Id: $id"
+        "\nexitForecast: $exitForecast,"
         "\noccurrenceDate: $occurrenceDate"
         "\nCar: ${car.plate} ${car.model}"
-        "\nisFinalized: $isFinalized";
+        "\nisFinalized: $isFinalized"
+        "\nReasons: $reason"
+        "\nPersons: $persons";
   }
 }

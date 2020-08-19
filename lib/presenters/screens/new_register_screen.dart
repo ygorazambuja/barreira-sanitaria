@@ -1,8 +1,13 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../domain/entities/car.dart';
 import '../../domain/entities/person.dart';
+import '../../domain/entities/registers.dart';
+import '../../domain/usecases/registers_usecases/new_register_usecase.dart';
+import '../../infra/repositories/implementation/register_repository_implementation.dart';
 import '../../shared/custom_bottom_app_bar.dart';
 import '../../shared/shared_main_drawer.dart';
 import '../../utils/upper_case_text_formatter.dart';
@@ -16,8 +21,9 @@ class NewRegisterScreen extends StatefulWidget {
 
 class _NewRegisterScreenState extends State<NewRegisterScreen> {
   final _placaController = TextEditingController();
-  final _dateTimeController = TextEditingController();
-
+  final _modelController = TextEditingController();
+  final _reasonController = TextEditingController();
+  DateTime _exitForecast;
   final MaskTextInputFormatter cpfFormatter = MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {'#': RegExp(r'[0-9]')});
   final MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
@@ -33,6 +39,51 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   void onDismissDelete(int index) {
     setState(() {
       passengers.removeAt(index);
+    });
+  }
+
+  void onSaveClick() async {
+    final car = Car(
+      model: _modelController.text,
+      plate: _placaController.text,
+    );
+    final register = Register(
+      car: car,
+      exitForecast: _exitForecast == null ? null : _exitForecast,
+      reason: _reasonController.text,
+      occurrenceDate: DateTime.now(),
+      persons: passengers,
+      isFinalized: !_isViajante,
+      id: Uuid().v4(),
+    );
+
+    final insertedRegister = await NewRegisterUseCase(
+      register: register,
+      repository: RegisterRepositoryImplementation(),
+    )();
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text('Registro inserido com o ID: $insertedRegister'),
+          actions: [
+            FlatButton(
+              child: Text('Sair'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/');
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    Navigator.pop(context);
+  }
+
+  void updatePassengerList(int index, Person person) {
+    setState(() {
+      passengers[index] = person;
     });
   }
 
@@ -117,50 +168,64 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                       ),
                     ),
                     _isViajante
-                        ? Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white30),
-                                borderRadius: BorderRadius.circular(20)),
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                Text('Estipular Horario para Saida'),
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: DateTimePicker(
-                                    controller: _dateTimeController,
-                                    type: DateTimePickerType.dateTimeSeparate,
-                                    dateMask: 'dd/MM/yyyy',
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime(2021),
-                                    dateLabelText: 'Data',
-                                    timeLabelText: 'Horário',
-                                    onChanged: (value) => print,
-                                    use24HourFormat: true,
+                        ? Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white30),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Text('Estipular Horario para Saida'),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: DateTimePicker(
+                                          type: DateTimePickerType
+                                              .dateTimeSeparate,
+                                          initialValue: '',
+                                          dateMask: 'dd/MM/yyyy',
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime(2021),
+                                          dateLabelText: 'Data',
+                                          timeLabelText: 'Horário',
+                                          onChanged: (value) => setState(() {
+                                            _exitForecast =
+                                                DateTime.parse(value);
+                                          }),
+                                          use24HourFormat: true,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: TextFormField(
+                                  controller: _reasonController,
+                                  decoration: InputDecoration(
+                                      labelText: 'Motivos da Visita',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          gapPadding: 2)),
+                                ),
+                              ),
+                            ],
                           )
                         : Container(),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
+                          controller: _modelController,
                           decoration: InputDecoration(
                               labelText: "Modelo do carro",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   gapPadding: 2))),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Motivos da Visita',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                gapPadding: 2)),
-                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -184,7 +249,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                         ? PassengerListRender(
                             onDismissDelete: onDismissDelete,
                             passengers: passengers,
-                          )
+                            onUpdate: updatePassengerList)
                         : Container()
                   ],
                 ),
@@ -194,7 +259,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: onSaveClick,
         label: Text('Salvar'),
         icon: Icon(Icons.save),
         shape: BeveledRectangleBorder(),
@@ -205,10 +270,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
 }
 
 class PassengerListRender extends StatelessWidget {
+  final Function onUpdate;
+
   PassengerListRender({
     Key key,
     this.passengers,
     this.onDismissDelete,
+    this.onUpdate,
   }) : super(key: key);
 
   final List<Person> passengers;
@@ -220,7 +288,7 @@ class PassengerListRender extends StatelessWidget {
       shrinkWrap: true,
       itemCount: passengers.length,
       itemBuilder: (context, index) {
-        final passenger = passengers[index];
+        var passenger = passengers[index];
         return Dismissible(
           onDismissed: (direction) {
             onDismissDelete(index);
@@ -230,6 +298,18 @@ class PassengerListRender extends StatelessWidget {
           ),
           key: UniqueKey(),
           child: ListTile(
+            onTap: () async {
+              var person = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewPassengerScreen.editar(
+                      person: passenger,
+                    ),
+                  ));
+              if (person != null) {
+                onUpdate(index, person);
+              }
+            },
             title: Text('Nome: ${passenger.fullName}'),
             subtitle: Text('CPF: ${passenger.cpf}\n'
                 'Telefone: ${passenger.phone}'),

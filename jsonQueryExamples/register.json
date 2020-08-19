@@ -1,0 +1,39 @@
+{
+  "objects": {
+    "exitForecast": "2020-08-01T09:56:25+00:00",
+    "occurrenceDate": "2020-08-02T14:56:25",
+    "isFinalized": false,
+    "car": {
+      "data": {
+        "model": "Carro 6",
+        "plate": "DAD1941"
+      }
+    },
+    "registers_persons": {
+      "data":[
+        {
+          "person": {
+            "data": {
+							"cpf": "89080684976",
+              "fullName": "TFUYTFYUTFU",
+              "phone": "759497457",
+              "traveler": false
+            }
+          }
+        },
+        {
+          "person": {
+            "data": {
+							"cpf": "5746546545",
+              "fullName": "TFOUTS AUSDIUAHS",
+              "phone": "49162198797",
+              "traveler": false
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+

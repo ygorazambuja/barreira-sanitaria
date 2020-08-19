@@ -10,6 +10,7 @@ import '../../repository/abstract/register_repository_abstract.dart';
 import '../../shared/custom_bottom_app_bar.dart';
 import '../../shared/shared_main_drawer.dart';
 import '../../utils/cpf_formatter.dart';
+import '../components/title_top.dart';
 
 class RegisterDetailsScreen extends StatelessWidget {
   final String registerId;
@@ -33,26 +34,8 @@ class RegisterDetailsScreen extends StatelessWidget {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: InkWell(
-                    child: Icon(Icons.arrow_back),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Text('Detalhes do Registro',
-                      style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.08,
-                          fontWeight: FontWeight.w300)),
-                ),
-              ],
+            TitleTop(
+              title: 'Detalhes do Registro',
             ),
             _RegisterDetails(repository: repository, registerId: registerId)
           ],

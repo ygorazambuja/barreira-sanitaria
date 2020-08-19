@@ -36,7 +36,9 @@ class RegisterJsonMapper extends Register {
       'car': carToMap,
       'exitForecast': exitForecast?.millisecondsSinceEpoch,
       'occurrenceDate': occurrenceDate?.millisecondsSinceEpoch,
-      'persons': personsToMap,
+      'registers_persons': personsToMap.map((e) => {
+            'person': {'data': e}
+          }),
       'isFinalized': isFinalized
     };
   }

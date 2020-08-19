@@ -8,9 +8,9 @@ class NewPassengerScreen extends StatefulWidget {
   Person person;
 
   NewPassengerScreen.editar({this.person});
+
   NewPassengerScreen() {
-    person = Person();
-    person.traveler = false;
+    person = Person(cpf: '', fullName: '', phone: '', traveler: false);
   }
 
   @override
@@ -19,11 +19,26 @@ class NewPassengerScreen extends StatefulWidget {
 
 class _NewPassengerScreenState extends State<NewPassengerScreen> {
   bool _passengerTravelerController = false;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController cpfController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   MaskTextInputFormatter cpfFormatter = MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {'#': RegExp(r'[0-9]')});
   MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
       mask: '(##)-#####-####', filter: {'#': RegExp(r'[0-9]')});
+
+  @override
+  void initState() {
+    setState(() {
+      nameController.text = widget.person.fullName;
+      cpfController.text = widget.person.cpf;
+      phoneController.text = widget.person.phone;
+      _passengerTravelerController = widget.person.traveler;
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +60,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                controller: nameController,
                 onChanged: (value) =>
                     setState(() => widget.person.fullName = value),
                 decoration: InputDecoration(
@@ -59,6 +75,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                controller: cpfController,
                 inputFormatters: [cpfFormatter],
                 keyboardType: TextInputType.number,
                 onChanged: (value) => setState(() {
@@ -76,6 +93,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                controller: phoneController,
                 keyboardType: TextInputType.number,
                 onChanged: (value) =>
                     setState(() => widget.person.phone = value),
@@ -97,6 +115,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
                   value: _passengerTravelerController,
                   onChanged: (value) {
                     setState(() {
+                      widget.person.traveler = value;
                       _passengerTravelerController = value;
                     });
                   },

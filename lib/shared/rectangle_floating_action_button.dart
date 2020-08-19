@@ -1,5 +1,5 @@
-import 'package:barreira_sanitaria/presenters/screens/new_register_screen.dart';
 import 'package:flutter/material.dart';
+import '../presenters/screens/new_register_screen.dart';
 
 class RectangleFloatingActionButton extends StatelessWidget {
   const RectangleFloatingActionButton({
