@@ -38,11 +38,11 @@ dependencies:
   mask_text_input_formatter: 1.0.7
 
 dev_dependencies:
+  pedantic: 1.9.2
+  mockito:
   flutter_test:
     sdk: flutter
-  effective_dart: ^1.2.0
-  build_runner:
-  json_serializable:
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

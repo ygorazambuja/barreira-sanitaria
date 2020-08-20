@@ -11,6 +11,6 @@ class Car {
 
   @override
   String toString() {
-    return "Plate: $plate, Model: $model";
+    return 'Plate: $plate, Model: $model';
   }
 }

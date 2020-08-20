@@ -4,7 +4,10 @@ import 'package:barreira_sanitaria/domain/entities/registers.dart';
 import 'package:barreira_sanitaria/domain/usecases/registers_usecases/new_register_usecase.dart';
 import 'package:barreira_sanitaria/infra/repositories/implementation/register_repository_implementation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:uuid/uuid.dart';
+
+class RegisterRepositoryMock extends Mock {}
 
 void main() {
   test('add new register', () async {
@@ -31,7 +34,10 @@ void main() {
       occurrenceDate: DateTime.now(),
       persons: [person1, person2],
     );
-    NewRegisterUseCase(
+
+    var addedRegister = await NewRegisterUseCase(
         register: register, repository: RegisterRepositoryImplementation())();
+
+    expect(addedRegister, isA<Register>());
   });
 }

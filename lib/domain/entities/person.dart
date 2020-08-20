@@ -15,8 +15,8 @@ class Person {
 
   @override
   String toString() {
-    return "Cpf: $cpf\nTelefone: $phone"
-        "\nNome: $fullName"
-        "\nViajante: $traveler";
+    return 'Cpf: $cpf\nTelefone: $phone'
+        '\nNome: $fullName'
+        '\nViajante: $traveler';
   }
 }

@@ -23,12 +23,12 @@ class Register {
 
   @override
   String toString() {
-    return "Id: $id"
-        "\nexitForecast: $exitForecast,"
-        "\noccurrenceDate: $occurrenceDate"
-        "\nCar: ${car.plate} ${car.model}"
-        "\nisFinalized: $isFinalized"
-        "\nReasons: $reason"
-        "\nPersons: $persons";
+    return 'Id: $id'
+        '\nexitForecast: $exitForecast,'
+        '\noccurrenceDate: $occurrenceDate'
+        '\nCar: ${car.plate} ${car.model}'
+        '\nisFinalized: $isFinalized'
+        '\nReasons: $reason'
+        '\nPersons: $persons';
   }
 }

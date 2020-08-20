@@ -3,7 +3,9 @@ import 'dart:convert';
 import '../entities/car.dart';
 
 class CarJsonMapper extends Car {
+  @override
   String plate;
+  @override
   String model;
 
   CarJsonMapper({

@@ -13,7 +13,7 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
     final existentCar = await getCarByPlate(car.plate);
 
     if (existentCar == null) {
-      final query = """
+      final query = '''
       mutation AddNewCar(\$plate: String = "", \$model: String = "") {
   insert_cars(objects: {model: \$model, plate: \$plate}) {
     returning {
@@ -22,7 +22,7 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
     }
   }
 }
-        """;
+        ''';
 
       final response = await hasuraConnect.mutation(
         query,
@@ -46,20 +46,20 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
 
   @override
   Future<Car> getCarByPlate(String plate) async {
-    final query = """
+    final query = '''
     query MyQuery(\$_eq: String = "") {
       cars(where: {plate: {_eq: \$_eq}}) {
         plate
         model
       }
     }
-    """;
+    ''';
 
     final response =
         await hasuraConnect.query(query, variables: {'_eq': plate});
 
     var cars = response['data']['cars'] as List;
-    if (cars.length == 0) {
+    if (cars.isEmpty) {
       return null;
     } else {
       return CarJsonMapper(

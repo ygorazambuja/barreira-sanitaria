@@ -20,7 +20,7 @@ class RegisterCardListBuilder extends StatelessWidget {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
-          if (snapshot.data.length > 0) {
+          if (snapshot.data.isNotEmpty) {
             return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data.length,

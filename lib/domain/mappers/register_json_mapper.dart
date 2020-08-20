@@ -7,12 +7,20 @@ import 'car_json_mapper.dart';
 import 'person_json_mapper.dart';
 
 class RegisterJsonMapper extends Register {
+  @override
   String id;
+  @override
   Car car;
+  @override
   DateTime exitForecast;
+  @override
   DateTime occurrenceDate;
+  @override
   bool isFinalized;
+  @override
   List<Person> persons;
+  @override
+  String reason;
 
   RegisterJsonMapper(
       {this.id,
@@ -20,6 +28,7 @@ class RegisterJsonMapper extends Register {
       this.exitForecast,
       this.occurrenceDate,
       this.persons,
+      this.reason,
       this.isFinalized});
 
   Map<String, dynamic> toMap() {
@@ -48,6 +57,7 @@ class RegisterJsonMapper extends Register {
     return RegisterJsonMapper(
       id: map['id'],
       isFinalized: map['isFinalized'],
+      reason: map['reason'],
       car: CarJsonMapper.fromMap(map['car']),
       exitForecast: map['exitForecast'] != null
           ? DateTime.parse(map['exitForecast'])

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import "../../domain/entities/person.dart";
+import '../../domain/entities/person.dart';
 import '../../domain/usecases/person_usecases/fetch_travelers_by_partial_cpf_usecase.dart';
 import '../../infra/repositories/implementation/person_repository_implementation.dart';
 import '../../shared/custom_bottom_app_bar.dart';
@@ -90,7 +90,10 @@ class __BodyState extends State<_Body> {
                               onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => PersonDetailsScreen(),
+                                    builder: (context) => PersonDetailsScreen(
+                                        cpf: person.cpf,
+                                        repository:
+                                            PersonRepositoryImplementation()),
                                   )),
                             );
                           },
@@ -109,3 +112,5 @@ class __BodyState extends State<_Body> {
     );
   }
 }
+
+/// cepem.pericia@gmail.com

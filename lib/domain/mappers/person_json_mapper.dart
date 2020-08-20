@@ -3,9 +3,13 @@ import 'dart:convert';
 import '../entities/person.dart';
 
 class PersonJsonMapper extends Person {
+  @override
   String cpf;
+  @override
   String phone;
+  @override
   String fullName;
+  @override
   bool traveler;
 
   PersonJsonMapper({

@@ -4,6 +4,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../domain/entities/person.dart';
 import '../components/title_top.dart';
 
+// ignore: must_be_immutable
 class NewPassengerScreen extends StatefulWidget {
   Person person;
 
@@ -47,7 +48,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
         onPressed: () {
           Navigator.pop(context, widget.person);
         },
-        label: Text("Salvar"),
+        label: Text('Salvar'),
         icon: Icon(Icons.save),
       ),
       body: Container(

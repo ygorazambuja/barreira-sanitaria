@@ -30,8 +30,8 @@ class RegisterCard extends StatelessWidget {
       },
       child: Card(
         color: register.isFinalized
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+            ? Colors.green[600].withOpacity(0.8)
+            : Colors.redAccent[400].withOpacity(0.4),
         elevation: 9,
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -40,13 +40,13 @@ class RegisterCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("Placa do carro: ${register.carPlate}"),
+                child: Text('Placa do carro: ${register.carPlate}'),
               ),
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Text("Data: ",
+                      Text('Data: ',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(DateFormat(DateFormat.HOUR24_MINUTE)
                           .format(occurrenceDate)),

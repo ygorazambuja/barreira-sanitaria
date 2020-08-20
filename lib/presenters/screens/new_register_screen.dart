@@ -49,7 +49,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
     );
     final register = Register(
       car: car,
-      exitForecast: _exitForecast == null ? null : _exitForecast,
+      exitForecast: _exitForecast,
       reason: _reasonController.text,
       occurrenceDate: DateTime.now(),
       persons: passengers,
@@ -139,7 +139,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                                 ],
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    return "Campo não pode ser vazio";
+                                    return 'Campo não pode ser vazio';
                                   }
                                   if (value.length != 8) {
                                     return 'Placa precisa ter 7 Caracteres';
@@ -222,7 +222,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                       child: TextFormField(
                           controller: _modelController,
                           decoration: InputDecoration(
-                              labelText: "Modelo do carro",
+                              labelText: 'Modelo do carro',
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   gapPadding: 2))),

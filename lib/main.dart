@@ -10,7 +10,7 @@ class StartUp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        "/": (context) => HomeScreen(),
+        '/': (context) => HomeScreen(),
       },
       themeMode: ThemeMode.dark,
       theme: ThemeData(

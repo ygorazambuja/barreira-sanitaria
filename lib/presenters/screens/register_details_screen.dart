@@ -1,3 +1,5 @@
+import 'package:barreira_sanitaria/infra/repositories/implementation/person_repository_implementation.dart';
+import 'package:barreira_sanitaria/presenters/screens/person_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -150,6 +152,22 @@ class _RegisterDetails extends StatelessWidget {
                   ],
                 ),
               ),
+              register.reason != null
+                  ? Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      elevation: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          children: [
+                            Text('Motivos da Visita'),
+                            Text(register.reason)
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
               register.isFinalized ? Container() : FinalizedButtonStatus(),
               snapshot.hasData && register.persons != null
                   ? PassengerList(
@@ -196,7 +214,7 @@ class FinalizedButtonStatus extends StatelessWidget {
                       children: [
                         RaisedButton.icon(
                           icon: Icon(Icons.done),
-                          label: Text("Sim"),
+                          label: Text('Sim'),
                           onPressed: () {
                             RegisterRepositoryImplementation()
                                 .finalizeRegister(registerId);
@@ -286,6 +304,20 @@ class PassengerCard extends StatelessWidget {
                   child: Wrap(
                 children: [
                   ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('Registros com a Mesma Pessoa'),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PersonDetailsScreen(
+                              cpf: passenger.cpf,
+                              repository: PersonRepositoryImplementation(),
+                            ),
+                          ));
+                    },
+                  ),
+                  ListTile(
                     leading: Icon(Icons.phone),
                     title: Text('Fazer Ligação'),
                     onTap: () {
@@ -294,7 +326,7 @@ class PassengerCard extends StatelessWidget {
                   ),
                   ListTile(
                     leading: Icon(Icons.message),
-                    title: Text("WhatsApp"),
+                    title: Text('WhatsApp'),
                     onTap: () {
                       launch('whatsapp://send?phone=+55${passenger.phone}');
                     },

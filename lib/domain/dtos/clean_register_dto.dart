@@ -2,9 +2,13 @@ import '../entities/registers.dart';
 
 class CleanRegisterDto extends Register {
   String carPlate;
+  @override
   String id;
+  @override
   DateTime exitForecast;
+  @override
   DateTime occurrenceDate;
+  @override
   bool isFinalized;
 
   CleanRegisterDto({

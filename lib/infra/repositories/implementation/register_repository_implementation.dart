@@ -8,14 +8,13 @@ import '../../../domain/mappers/register_json_mapper.dart';
 import '../../../domain/mappers/registers_persons_hasura_mapper.dart';
 import '../../../repository/abstract/register_repository_abstract.dart';
 import '../../constants/constants.dart';
-import 'person_repository_implementation.dart';
 
 class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   final hasuraConnect = HasuraConnect(HASURA_URL);
 
   @override
   Future<List<Register>> getAll() async {
-    final query = """
+    final query = '''
     subscription {
   registers {
     id
@@ -35,7 +34,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
     }
   }
 }
-    """;
+    ''';
 
     final response = await hasuraConnect.query(query);
     final registersJson = response['data']['registers'] as List;
@@ -49,7 +48,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
 
   @override
   Future<Register> getRegisterById(String id) async {
-    final _query = """
+    final _query = '''
       query {
         registers(where: {id: {_eq: "$id"}}) {
         car {
@@ -60,6 +59,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         exitForecast
         id
         occurrenceDate
+        reason
         registers_persons {
           person {
           cpf
@@ -69,7 +69,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
           }
         }
       }
-    }""";
+    }''';
 
     final response = await hasuraConnect.query(_query);
     if (response == null) {
@@ -80,42 +80,8 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   }
 
   @override
-  Future<void> newRegisterAux(Register register) async {
-    for (var person in register.persons) {
-      PersonRepositoryImplementation().addNewPerson(person);
-    }
-
-    final registerMutation = """
-      mutation MyMutation(\$model: String, \$plate:String, \$exitForecast: timestamptz, \$id: uuid, \$occurrenceDate: timestamp, \$reason:String, \$isFinalized: Boolean) {
-        insert_registers(objects: {car: {data: {model: \$model, plate: \$plate}}, isFinalized: \$isFinalized, reason: \$reason, occurrenceDate: \$occurrenceDate, exitForecast: \$exitForecast, id: \$id}) {
-          affected_rows
-        }
-      }
-    """;
-
-    final response = await hasuraConnect.mutation(
-      registerMutation,
-      variables: {
-        'plate': register.car.plate,
-        'model': register.car.model,
-        'exitForecast': register.exitForecast == null
-            ? null
-            : register.exitForecast.toIso8601String(),
-        'occurrenceDate': register.occurrenceDate.toIso8601String(),
-        'id': register.id,
-        'isFinalized': register.isFinalized,
-        'reason': register.reason
-      },
-    );
-
-    var affectedRows =
-        int.parse(response['data']['insert_registers']['affected_rows']);
-    if (affectedRows > 0) {}
-  }
-
-  @override
   Future<List<CleanRegisterDto>> fetchCleanRegistersDto() async {
-    final query = """
+    final query = '''
     query {
       registers {
         carPlate
@@ -125,7 +91,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         isFinalized
       }
     }
-    """;
+    ''';
 
     final response = await hasuraConnect.query(query);
     final registersJson = response['data']['registers'] as List;
@@ -139,7 +105,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
 
   @override
   Future<List<CleanRegisterDto>> fetchFinalizedCleanRegistersDto() async {
-    final query = """
+    final query = '''
     query finalized {
       registers(where: {isFinalized: {_eq: true}}) {
         id
@@ -149,7 +115,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         isFinalized
       }
     }
-""";
+''';
 
     final response = await hasuraConnect.query(query);
     final registersJson = response['data']['registers'] as List;
@@ -163,7 +129,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
 
   @override
   Future<List<CleanRegisterDto>> fetchNonFinalizedCleanRegistersDto() async {
-    final query = """
+    final query = '''
     query finalized {
       registers(where: {isFinalized: {_eq: false}}) {
         id
@@ -173,7 +139,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         isFinalized
       }
     }
-""";
+''';
 
     final response = await hasuraConnect.query(query);
     final registersJson = response['data']['registers'] as List;
@@ -187,13 +153,13 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
 
   @override
   Future<int> finalizeRegister(String _eq) async {
-    final query = """
+    final query = '''
     mutation MyMutation(\$_eq: uuid) {
       update_registers(where: {id: {_eq: \$_eq}}, _set: {isFinalized: true}) {
         affected_rows
       }
     }
-    """;
+    ''';
     final response =
         await hasuraConnect.mutation(query, variables: {'_eq': _eq});
     final int affectedRows =
@@ -201,58 +167,9 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
     return affectedRows;
   }
 
-  void testInsertion(Register register) async {
-    final query = """
-    mutation MyMutation(\$objects: [registers_insert_input!]! = {}) {
-      insert_registers(objects: \$objects) {
-        affected_rows
-      }
-    }
-
-""";
-
-    final response = await hasuraConnect.mutation(query, variables: {
-      "objects": {
-        "car": {
-          "data": {"model": "86538ertyeyre5368", "plate": "rytr"}
-        },
-        "reason": "asuhdiasuhdasudas",
-        "exitForecast": null,
-        "occurrenceDate": "2020-08-18T02:41:26+00:00",
-        "isFinalized": true,
-        "id": "e954e761-e99a-4fce-9eaa-1efba592d056",
-        "registers_persons": {
-          "data": [
-            {
-              "person": {
-                "data": {
-                  "cpf": "1462684178",
-                  "fullName": "Pessoa807!08",
-                  "traveler": false,
-                  "phone": "012673190264"
-                }
-              }
-            },
-            {
-              "person": {
-                "data": {
-                  "cpf": "182813694612",
-                  "fullName": "Pessoa 123",
-                  "traveler": true,
-                  "phone": "1286134895"
-                }
-              }
-            }
-          ]
-        }
-      }
-    });
-    print(response);
-  }
-
   @override
   Future<String> newRegister(Register register) async {
-    final mutation = """
+    final mutation = '''
         mutation MyMutation(\$objects: [registers_insert_input!]! = {}) {
           insert_registers(objects: \$objects) {
             returning {
@@ -260,7 +177,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
             }
           }
         }
-    """;
+    ''';
 
     var objects = <String, dynamic>{};
     objects.addAll(CarHasuraMapper.toMap(register.car));
@@ -270,7 +187,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
     objects.addAll(RegisterHasuraMapper.toMap(register));
 
     final response =
-        await hasuraConnect.mutation(mutation, variables: {"objects": objects});
+        await hasuraConnect.mutation(mutation, variables: {'objects': objects});
 
     return response['data']['insert_registers']['returning'][0]['id']
         .toString();

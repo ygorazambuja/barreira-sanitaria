@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import "../../domain/usecases/registers_usecases/all_clean_registers_dto.dart";
+import '../../domain/usecases/registers_usecases/all_clean_registers_dto.dart';
 import '../../domain/usecases/registers_usecases/all_registers_usecase.dart';
 import '../../infra/repositories/implementation/register_repository_implementation.dart';
 import '../../shared/custom_bottom_app_bar.dart';
