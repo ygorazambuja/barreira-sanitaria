@@ -1,5 +1,6 @@
 import 'package:barreira_sanitaria/infra/repositories/implementation/person_repository_implementation.dart';
 import 'package:barreira_sanitaria/presenters/screens/person_details_screen.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -71,85 +72,43 @@ class _RegisterDetails extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 elevation: 10,
                 child: Padding(
-                  padding: const EdgeInsets.all(14.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Placa do Carro: \t'
-                        '${snapshot.data.car.plate}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(
-                        'Modelo: \t'
-                        '${register.car.model}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ListTile(
+                        trailing: Icon(Icons.arrow_forward),
+                        leading: Icon(Icons.car_rental),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container();
+                              });
+                        },
+                        title:
+                            Text('Placa do Carro: ${snapshot.data.car.plate}'),
+                        subtitle: Text('Modelo: ${snapshot.data.car.model}'),
                       ),
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Row(
-                  mainAxisAlignment: register.exitForecast == null
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      elevation: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Horario do Registro',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            ),
-                            Text(DateFormat(
-                                    DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY,
-                                    'pt_BR')
-                                .format(register.occurrenceDate)),
-                            Text(DateFormat(
-                                    DateFormat.HOUR24_MINUTE_SECOND, 'pt_BR')
-                                .format(register.occurrenceDate))
-                          ],
-                        ),
-                      ),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  elevation: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: ListTile(
+                      leading: Icon(Icons.schedule),
+                      title: Text(
+                          'Data: ${DateFormat(DateFormat.MONTH_WEEKDAY_DAY, "pt_BR").format(register.occurrenceDate)}'),
+                      subtitle: Text(
+                          'Horario: ${DateFormat(DateFormat.HOUR24_MINUTE).format(register.occurrenceDate)}'),
                     ),
-                    if (register.exitForecast != null)
-                      Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        elevation: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Text('Expectativa de Saida',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold)),
-                              Text(DateFormat(
-                                      DateFormat.YEAR_ABBR_MONTH_WEEKDAY_DAY,
-                                      'pt_BR')
-                                  .format(register.exitForecast)),
-                              Text(DateFormat(
-                                      DateFormat.HOUR24_MINUTE_SECOND, 'pt_BR')
-                                  .format(register.exitForecast))
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      Container(),
-                  ],
+                  ),
                 ),
               ),
               register.reason != null
@@ -158,13 +117,11 @@ class _RegisterDetails extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       elevation: 10,
                       child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Column(
-                          children: [
-                            Text('Motivos da Visita'),
-                            Text(register.reason)
-                          ],
-                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                            leading: Icon(Icons.card_travel),
+                            title: Text('Motivos da Visita'),
+                            subtitle: Text(register.reason)),
                       ),
                     )
                   : Container(),
@@ -215,10 +172,14 @@ class FinalizedButtonStatus extends StatelessWidget {
                         RaisedButton.icon(
                           icon: Icon(Icons.done),
                           label: Text('Sim'),
-                          onPressed: () {
-                            RegisterRepositoryImplementation()
+                          onPressed: () async {
+                            await RegisterRepositoryImplementation()
                                 .finalizeRegister(registerId);
-                            Navigator.pushNamed(context, '/');
+                            BotToast.showNotification(
+                              title: (cancelFunc) =>
+                                  Text('Registro foi baixado com sucesso'),
+                            );
+                            await Navigator.pushNamed(context, '/');
                           },
                         ),
                         RaisedButton.icon(
@@ -305,7 +266,7 @@ class PassengerCard extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(Icons.person),
-                    title: Text('Registros com a Mesma Pessoa'),
+                    title: Text('Detalhes da Pessoa'),
                     onTap: () {
                       Navigator.push(
                           context,

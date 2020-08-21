@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import '../entities/car.dart';
 
 class CarJsonMapper extends Car {
@@ -9,8 +11,8 @@ class CarJsonMapper extends Car {
   String model;
 
   CarJsonMapper({
-    this.plate,
-    this.model,
+    @required this.plate,
+    @required this.model,
   });
 
   Map<String, dynamic> toMap() {

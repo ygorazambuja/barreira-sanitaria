@@ -196,4 +196,94 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
     //     response['data']['insert_registers']['returning']['id'] as String);
     // return insertedRegister;
   }
+
+  @override
+  Future<List<CleanRegisterDto>> fetchCleanRegisterByCarPlate(
+      String plate) async {
+    final query = '''
+    query MyQuery(\$_eq: String) {
+      registers(where: {carPlate: {_eq: \$_eq}}) {
+        carPlate
+        exitForecast
+        id
+        isFinalized
+        occurrenceDate
+      }
+    }
+
+    ''';
+
+    final response =
+        await hasuraConnect.query(query, variables: {'_eq': plate});
+    final registersJson = response['data']['registers'] as List;
+
+    var registers = <CleanRegisterDto>[];
+    for (var registerJson in registersJson) {
+      registers.add(CleanRegisterDto.fromMap(registerJson));
+    }
+    return registers;
+  }
+
+  @override
+  Future<List<CleanRegisterDto>> fetchRegistersByPerson(String cpf) async {
+    final query = '''
+    query MyQuery(\$_eq: String) {
+      persons(where: {cpf: {_eq: \$_eq}}) {
+        registers_persons {
+          register {
+            exitForecast
+            carPlate
+            id
+            isFinalized
+            occurrenceDate
+            reason
+          }
+        }
+      }
+    }
+    ''';
+
+    final response = await hasuraConnect.query(query, variables: {'_eq': cpf});
+    final registersJson =
+        response['data']['persons'][0]['registers_persons'] as List;
+
+    var registers = <CleanRegisterDto>[];
+    for (var register in registersJson) {
+      registers.add(CleanRegisterDto.fromMap(register['register']));
+    }
+    return registers;
+  }
+
+  @override
+  Stream<int> lengthNonFinalizedRegister() {
+    final subscription = '''
+    subscription MyQuery {
+      registers(where: {isFinalized: {_eq: false}}) {
+        id
+        isFinalized
+      }
+    }
+''';
+
+    try {
+      var snapshot = hasuraConnect.subscription(subscription);
+
+      return snapshot.map((event) {
+        var registers = event['data']['registers'] as List;
+        return registers.length;
+      });
+      // snapshot.listen((event) {
+      //   var registers = event['data']['registers'] as List;
+      //   return registers.length;
+      // });
+    } on HasuraError catch (e) {
+      print('LOGX ==:>> ERROR[getDebts]');
+      print(e);
+      print(e.extensions);
+      print('=================');
+      return null;
+    }
+  }
 }
+
+// TODO Inserir mesmas pessoas, com o mesmo carro, porem registros diferentes

@@ -9,7 +9,8 @@ class RegisterPersonsHasuraMapper {
           'fullName': person.fullName,
           'traveler': person.traveler,
           'phone': person.phone
-        }
+        },
+        'on_conflict': {'constraint': 'persons_pkey', 'update_columns': 'cpf'}
       }
     };
   }

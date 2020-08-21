@@ -7,9 +7,10 @@ abstract class RegisterRepositoryAbstract {
   Future<Register> getRegisterById(String id);
   Future<List<Register>> getAll();
   Future<List<CleanRegisterDto>> fetchCleanRegistersDto();
-
   Future<List<CleanRegisterDto>> fetchFinalizedCleanRegistersDto();
   Future<List<CleanRegisterDto>> fetchNonFinalizedCleanRegistersDto();
-
+  Future<List<CleanRegisterDto>> fetchRegistersByPerson(String cpf);
+  Future<List<CleanRegisterDto>> fetchCleanRegisterByCarPlate(String plate);
   Future<int> finalizeRegister(String id);
+  Stream<int> lengthNonFinalizedRegister();
 }

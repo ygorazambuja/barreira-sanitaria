@@ -29,8 +29,9 @@ class RegisterCard extends StatelessWidget {
             ));
       },
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         color: register.isFinalized
-            ? Colors.green[600].withOpacity(0.8)
+            ? Colors.green.withOpacity(0.3)
             : Colors.redAccent[400].withOpacity(0.4),
         elevation: 9,
         child: Container(

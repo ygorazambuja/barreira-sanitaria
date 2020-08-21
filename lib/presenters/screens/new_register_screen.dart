@@ -1,3 +1,6 @@
+import 'package:barreira_sanitaria/domain/usecases/car_usecases/fetch_car_by_plate_usecase.dart';
+import 'package:barreira_sanitaria/infra/repositories/implementation/car_repository_implementation.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -61,22 +64,27 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
       register: register,
       repository: RegisterRepositoryImplementation(),
     )();
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Text('Registro inserido com o ID: $insertedRegister'),
-          actions: [
-            FlatButton(
-              child: Text('Sair'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
-              },
-            ),
-          ],
-        );
-      },
-    );
+
+    BotToast.showNotification(
+        title: (cancelFunc) => Text('Registro Inserido com Sucesso'),
+        subtitle: (cancelFunc) => Text(insertedRegister),
+        contentPadding: const EdgeInsets.all(8));
+    // await showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       content: Text('Registro inserido com o ID: $insertedRegister'),
+    //       actions: [
+    //         FlatButton(
+    //           child: Text('Sair'),
+    //           onPressed: () {
+    //             Navigator.pushNamed(context, '/');
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
 
     Navigator.pop(context);
   }
@@ -124,6 +132,23 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                         children: [
                           Expanded(
                             child: TextFormField(
+                                onChanged: (value) async {
+                                  if (value.length == 8) {
+                                    final car = await FetchCarByPlateUsecase(
+                                        plate: value,
+                                        repository:
+                                            CarRepositoryImplementation())();
+                                    if (car != null) {
+                                      setState(() {
+                                        _modelController.text = car.model;
+                                      });
+                                      BotToast.showNotification(
+                                        title: (cancelFunc) => Text(
+                                            'Modelo Preenchido automaticamente'),
+                                      );
+                                    }
+                                  }
+                                },
                                 decoration: InputDecoration(
                                     labelText: 'Placa do Carro: ',
                                     border: OutlineInputBorder(

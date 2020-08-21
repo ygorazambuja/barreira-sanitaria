@@ -21,7 +21,11 @@ class RegisterCardListBuilder extends StatelessWidget {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
           if (snapshot.data.isNotEmpty) {
-            return ListView.builder(
+            return ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                height: 2,
+              ),
+              scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {

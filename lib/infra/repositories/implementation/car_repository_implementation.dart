@@ -40,11 +40,6 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
   }
 
   @override
-  Future<List<Car>> getAll() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Car> getCarByPlate(String plate) async {
     final query = '''
     query MyQuery(\$_eq: String = "") {
@@ -63,8 +58,8 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
       return null;
     } else {
       return CarJsonMapper(
-        model: response['data']['cars'][0]['plate'],
-        plate: response['data']['cars'][0]['model'],
+        model: response['data']['cars'][0]['model'],
+        plate: response['data']['cars'][0]['plate'],
       );
     }
   }

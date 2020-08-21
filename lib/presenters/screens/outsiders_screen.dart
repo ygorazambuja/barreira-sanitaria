@@ -112,5 +112,3 @@ class __BodyState extends State<_Body> {
     );
   }
 }
-
-/// cepem.pericia@gmail.com

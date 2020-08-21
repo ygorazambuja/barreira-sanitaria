@@ -30,6 +30,7 @@ class PersonRepositoryImplementation implements PersonRepositoryAbstract {
     ''';
 
     final response = await hasuraConnect.query(query, variables: {'cpf': cpf});
+
     var persons = response['data']['persons'] as List;
     if (persons.isEmpty) {
       return null;

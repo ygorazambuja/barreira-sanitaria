@@ -1,3 +1,6 @@
+import 'package:barreira_sanitaria/domain/usecases/person_usecases/fetch_person_by_cpf_usecase.dart';
+import 'package:barreira_sanitaria/infra/repositories/implementation/person_repository_implementation.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -61,6 +64,46 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                controller: cpfController,
+                inputFormatters: [cpfFormatter],
+                keyboardType: TextInputType.number,
+                onChanged: (value) async {
+                  if (cpfController.text.length > 10) {
+                    final p = await FetchPersonByCpf(
+                        cpf: cpfController.text,
+                        repository: PersonRepositoryImplementation())();
+                    if (p == null) {
+                      return;
+                    } else {
+                      setState(() {
+                        widget.person = p;
+                        nameController.text = p.fullName;
+                        phoneController.text = p.phone;
+                        _passengerTravelerController = p.traveler;
+                      });
+                      BotToast.showNotification(
+                        title: (cancelFunc) {
+                          return Text('Campos Preenchidos Automaticamente ! ');
+                        },
+                      );
+                    }
+                  }
+                  setState(() {
+                    widget.person.cpf = value;
+                  });
+                },
+                decoration: InputDecoration(
+                    labelText: 'CPF',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      gapPadding: 2,
+                    ),
+                    icon: Icon(Icons.perm_device_information)),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
                 controller: nameController,
                 onChanged: (value) =>
                     setState(() => widget.person.fullName = value),
@@ -71,24 +114,6 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
                       gapPadding: 2,
                     ),
                     icon: Icon(Icons.account_circle)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: cpfController,
-                inputFormatters: [cpfFormatter],
-                keyboardType: TextInputType.number,
-                onChanged: (value) => setState(() {
-                  widget.person.cpf = value;
-                }),
-                decoration: InputDecoration(
-                    labelText: 'CPF',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      gapPadding: 2,
-                    ),
-                    icon: Icon(Icons.perm_device_information)),
               ),
             ),
             Padding(

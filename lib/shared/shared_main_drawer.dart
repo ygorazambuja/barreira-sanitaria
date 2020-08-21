@@ -1,3 +1,5 @@
+import 'package:barreira_sanitaria/presenters/screens/home_screen.dart';
+import 'package:barreira_sanitaria/presenters/screens/visit_history_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../presenters/screens/new_register_screen.dart';
@@ -59,6 +61,12 @@ class SharedMainDrawer extends StatelessWidget {
                   },
                 ),
                 ListTileDrawerItem(
+                  icon: Icon(Icons.home),
+                  text: 'Tela Principal',
+                  function: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeScreen())),
+                ),
+                ListTileDrawerItem(
                     icon: Icon(Icons.warning),
                     text: 'Cadastros sem Baixa',
                     function: () {
@@ -69,7 +77,7 @@ class SharedMainDrawer extends StatelessWidget {
                           ));
                     }),
                 ListTileDrawerItem(
-                    icon: Icon(Icons.access_alarms),
+                    icon: Icon(Icons.report),
                     text: 'Cadastros com Baixa',
                     function: () {
                       Navigator.push(
@@ -81,7 +89,11 @@ class SharedMainDrawer extends StatelessWidget {
                 ListTileDrawerItem(
                   icon: Icon(Icons.sd_storage),
                   text: 'Histórico de Visitas',
-                  function: () {},
+                  function: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VisitHistoryScreen(),
+                      )),
                 ),
                 ListTileDrawerItem(
                   icon: Icon(Icons.dashboard),
