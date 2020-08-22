@@ -1,4 +1,5 @@
 import 'package:barreira_sanitaria/presenters/screens/home_screen.dart';
+import 'package:barreira_sanitaria/presenters/screens/residents_screen.dart';
 import 'package:barreira_sanitaria/presenters/screens/visit_history_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,98 +22,100 @@ class SharedMainDrawer extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(
-                      'assets/images/bandeira-pg.jpg',
-                    ),
-                    minRadius: 75,
-                    maxRadius: 75,
-                    backgroundColor: Colors.indigo,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/images/bandeira-pg.jpg',
                   ),
+                  minRadius: 75,
+                  maxRadius: 75,
+                  backgroundColor: Colors.indigo,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Nome do Usuario',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Nome do Usuario',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Função Cargo',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Função Cargo',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-                ListTileDrawerItem(
-                  icon: Icon(Icons.headset),
-                  text: 'Novo Registro',
-                  function: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewRegisterScreen(),
-                        ));
-                  },
-                ),
-                ListTileDrawerItem(
-                  icon: Icon(Icons.home),
-                  text: 'Tela Principal',
-                  function: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen())),
-                ),
-                ListTileDrawerItem(
-                    icon: Icon(Icons.warning),
-                    text: 'Cadastros sem Baixa',
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterNonFinalizedScreen(),
-                          ));
-                    }),
-                ListTileDrawerItem(
-                    icon: Icon(Icons.report),
-                    text: 'Cadastros com Baixa',
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterFinalizedScreen(),
-                          ));
-                    }),
-                ListTileDrawerItem(
-                  icon: Icon(Icons.sd_storage),
-                  text: 'Histórico de Visitas',
-                  function: () => Navigator.push(
+              ),
+              ListTileDrawerItem(
+                icon: Icon(Icons.headset),
+                text: 'Novo Registro',
+                function: () {
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => VisitHistoryScreen(),
-                      )),
-                ),
-                ListTileDrawerItem(
-                  icon: Icon(Icons.dashboard),
-                  text: 'Moradores',
-                  function: () {},
-                ),
-                ListTileDrawerItem(
-                  icon: Icon(Icons.vibration),
-                  text: 'Visitantes',
+                        builder: (context) => NewRegisterScreen(),
+                      ));
+                },
+              ),
+              ListTileDrawerItem(
+                icon: Icon(Icons.home),
+                text: 'Tela Principal',
+                function: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen())),
+              ),
+              ListTileDrawerItem(
+                  icon: Icon(Icons.warning),
+                  text: 'Cadastros sem Baixa',
                   function: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OutsidersScreen(),
+                          builder: (context) => RegisterNonFinalizedScreen(),
                         ));
-                  },
-                )
-              ],
-            ),
+                  }),
+              ListTileDrawerItem(
+                  icon: Icon(Icons.report),
+                  text: 'Cadastros com Baixa',
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RegisterFinalizedScreen(),
+                        ));
+                  }),
+              ListTileDrawerItem(
+                icon: Icon(Icons.sd_storage),
+                text: 'Histórico de Visitas',
+                function: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VisitHistoryScreen(),
+                    )),
+              ),
+              ListTileDrawerItem(
+                icon: Icon(Icons.dashboard),
+                text: 'Moradores',
+                function: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ResidentsScreen(),
+                    )),
+              ),
+              ListTileDrawerItem(
+                icon: Icon(Icons.vibration),
+                text: 'Visitantes',
+                function: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OutsidersScreen(),
+                      ));
+                },
+              ),
+            ]),
           ),
         ));
   }
