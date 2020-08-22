@@ -1,3 +1,4 @@
+import 'package:barreira_sanitaria/infra/hasura_singleton_connect.dart';
 import 'package:hasura_connect/hasura_connect.dart';
 
 import '../../../domain/dtos/clean_register_dto.dart';
@@ -7,10 +8,9 @@ import '../../../domain/mappers/register_hasura_mapper.dart';
 import '../../../domain/mappers/register_json_mapper.dart';
 import '../../../domain/mappers/registers_persons_hasura_mapper.dart';
 import '../../../repository/abstract/register_repository_abstract.dart';
-import '../../constants/constants.dart';
 
 class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
-  final hasuraConnect = HasuraConnect(HASURA_URL);
+  final hasuraConnect = HasuraSingletonConnect.getConnection;
 
   @override
   Future<List<Register>> getAll() async {

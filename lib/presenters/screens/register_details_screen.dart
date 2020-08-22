@@ -1,4 +1,5 @@
 import 'package:barreira_sanitaria/infra/repositories/implementation/person_repository_implementation.dart';
+import 'package:barreira_sanitaria/presenters/screens/car_details_screen.dart';
 import 'package:barreira_sanitaria/presenters/screens/person_details_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -78,13 +79,12 @@ class _RegisterDetails extends StatelessWidget {
                       ListTile(
                         trailing: Icon(Icons.arrow_forward),
                         leading: Icon(Icons.car_rental),
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container();
-                              });
-                        },
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CarDetailsScreen(car: register.car.plate),
+                            )),
                         title:
                             Text('Placa do Carro: ${snapshot.data.car.plate}'),
                         subtitle: Text('Modelo: ${snapshot.data.car.model}'),

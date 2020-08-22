@@ -8,13 +8,9 @@ class RegisterCard extends StatelessWidget {
   const RegisterCard({
     Key key,
     @required this.register,
-    @required this.occurrenceDate,
-    @required this.exitForecast,
   }) : super(key: key);
 
   final CleanRegisterDto register;
-  final DateTime occurrenceDate;
-  final DateTime exitForecast;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +46,10 @@ class RegisterCard extends StatelessWidget {
                       Text('Data: ',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       Text(DateFormat(DateFormat.HOUR24_MINUTE)
-                          .format(occurrenceDate)),
+                          .format(register.occurrenceDate)),
                       Text(' ás ' +
                           DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
-                              .format(occurrenceDate))
+                              .format(register.occurrenceDate))
                     ],
                   )),
             ],

@@ -1,11 +1,11 @@
-import 'package:hasura_connect/hasura_connect.dart';
 import '../../../domain/entities/person.dart';
 import '../../../domain/mappers/person_json_mapper.dart';
 import '../../../repository/abstract/person_repository_abstract.dart';
-import '../../constants/constants.dart';
+import '../../hasura_singleton_connect.dart';
 
 class PersonRepositoryImplementation implements PersonRepositoryAbstract {
-  final HasuraConnect hasuraConnect = HasuraConnect(HASURA_URL);
+  final hasuraConnect = HasuraSingletonConnect.getConnection;
+
   @override
   Future<List<Person>> fetchOutsiders() {
     throw UnimplementedError();

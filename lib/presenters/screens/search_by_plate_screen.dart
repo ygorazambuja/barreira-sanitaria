@@ -4,12 +4,14 @@ import 'package:barreira_sanitaria/domain/usecases/car_usecases/fetch_car_by_pla
 import 'package:barreira_sanitaria/domain/usecases/registers_usecases/fetch_registers_by_car_plate_usecase.dart';
 import 'package:barreira_sanitaria/infra/repositories/implementation/car_repository_implementation.dart';
 import 'package:barreira_sanitaria/infra/repositories/implementation/register_repository_implementation.dart';
-import 'package:barreira_sanitaria/presenters/components/register_card.dart';
+import 'package:barreira_sanitaria/presenters/components/title_top.dart';
+import 'package:barreira_sanitaria/presenters/screens/register_details_screen.dart';
 import 'package:barreira_sanitaria/shared/custom_bottom_app_bar.dart';
 import 'package:barreira_sanitaria/shared/rectangle_floating_action_button.dart';
 import 'package:barreira_sanitaria/shared/shared_main_drawer.dart';
 import 'package:barreira_sanitaria/utils/upper_case_text_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class SearchByPlateScreen extends StatefulWidget {
@@ -38,6 +40,9 @@ class _SearchByPlateScreenState extends State<SearchByPlateScreen> {
         child: Container(
           child: Column(
             children: [
+              TitleTop(
+                title: 'Pesquisa por Placa',
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 40.0, horizontal: 15),
@@ -45,6 +50,7 @@ class _SearchByPlateScreenState extends State<SearchByPlateScreen> {
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
                       labelText: 'Placa',
+                      hintText: 'ABC-1234',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20))),
                   onChanged: (value) {
@@ -90,14 +96,12 @@ class _SearchByPlateScreenState extends State<SearchByPlateScreen> {
                                           itemCount: snapshot.data.length,
                                           itemBuilder: (context, index) {
                                             var register = snapshot.data[index];
-                                            return Wrap(children: [
-                                              RegisterCard(
-                                                  register: register,
-                                                  occurrenceDate:
-                                                      register.occurrenceDate,
-                                                  exitForecast:
-                                                      register.exitForecast),
-                                            ]);
+                                            return Wrap(
+                                              children: [
+                                                RegisterSimpleCard(
+                                                    register: register)
+                                              ],
+                                            );
                                           },
                                         );
                                       } else {
@@ -109,17 +113,60 @@ class _SearchByPlateScreenState extends State<SearchByPlateScreen> {
                               ),
                             ),
                           );
-                        } else {
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(
                             child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          return Center(
+                            child: Text('Não foi encontrado'),
                           );
                         }
                       },
                     )
-                  : Container()
+                  : Container(),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class RegisterSimpleCard extends StatelessWidget {
+  const RegisterSimpleCard({
+    Key key,
+    @required this.register,
+  }) : super(key: key);
+
+  final CleanRegisterDto register;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: InkWell(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RegisterDetailsScreen(
+                registerId: register.id,
+              ),
+            )),
+        child: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              children: [
+                Text('Data: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(DateFormat(DateFormat.HOUR24_MINUTE)
+                    .format(register.occurrenceDate)),
+                Text(' ás ' +
+                    DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
+                        .format(register.occurrenceDate))
+              ],
+            )),
       ),
     );
   }

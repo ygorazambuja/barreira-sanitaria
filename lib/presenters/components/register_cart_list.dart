@@ -21,22 +21,16 @@ class RegisterCardListBuilder extends StatelessWidget {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
           if (snapshot.data.isNotEmpty) {
-            return ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                height: 2,
-              ),
+            return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 final register = snapshot.data[index];
-                final occurrenceDate = register.occurrenceDate;
-                final exitForecast = register.exitForecast;
                 initializeDateFormatting('pt_BR', null);
                 return RegisterCard(
-                    register: register,
-                    occurrenceDate: occurrenceDate,
-                    exitForecast: exitForecast);
+                  register: register,
+                );
               },
             );
           } else {

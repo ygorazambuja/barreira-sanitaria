@@ -1,12 +1,13 @@
-import 'package:hasura_connect/hasura_connect.dart';
+import 'package:barreira_sanitaria/domain/entities/car_with_registers.dart';
+import 'package:barreira_sanitaria/domain/mappers/car_with_registers_hasura_mapper.dart';
 
 import '../../../domain/entities/car.dart';
 import '../../../domain/mappers/car_json_mapper.dart';
 import '../../../repository/abstract/car_repository_abstract.dart';
-import '../../constants/constants.dart';
+import '../../hasura_singleton_connect.dart';
 
 class CarRepositoryImplementation extends CarRepositoryAbstract {
-  HasuraConnect hasuraConnect = HasuraConnect(HASURA_URL);
+  final hasuraConnect = HasuraSingletonConnect.getConnection;
 
   @override
   Future<Car> addNewCar(Car car) async {
@@ -62,5 +63,30 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
         plate: response['data']['cars'][0]['plate'],
       );
     }
+  }
+
+  @override
+  Future<CarWithRegisters> fetchByPlate(String plate) async {
+    final query = '''
+    query MyQuery(\$_eq: String = "") {
+      cars(where: {plate: {_eq: \$_eq}}) {
+        registers {
+          id
+          exitForecast
+          carPlate
+          reason
+          occurrenceDate
+          isFinalized
+        }
+        model
+        plate
+      }
+    }
+    ''';
+
+    final response =
+        await hasuraConnect.query(query, variables: {'_eq': plate});
+
+    return CarWithRegistersHasuraMapper.fromMap(response['data']);
   }
 }

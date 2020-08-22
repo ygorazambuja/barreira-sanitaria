@@ -21,7 +21,7 @@ class TitleTop extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Text('$title',
-              style: TextStyle(fontSize: 34, fontWeight: FontWeight.w300)),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w300)),
         ),
       ],
     );
