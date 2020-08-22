@@ -15,11 +15,11 @@ class StartUp extends StatelessWidget {
       routes: {
         '/': (context) => HomeScreen(),
       },
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.purple,
-          fontFamily: GoogleFonts.poppins().fontFamily),
-      darkTheme: ThemeData(brightness: Brightness.dark),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.purple,
+        fontFamily: GoogleFonts.openSans().fontFamily,
+      ),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
