@@ -111,7 +111,7 @@ class _RegisterDetails extends StatelessWidget {
                   ),
                 ),
               ),
-              register.reason != null
+              register.reason != null || register.reason.trim().isNotEmpty
                   ? Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -143,6 +143,7 @@ class _RegisterDetails extends StatelessWidget {
 
 class FinalizedButtonStatus extends StatelessWidget {
   final String registerId;
+
   const FinalizedButtonStatus({Key key, this.registerId}) : super(key: key);
 
   @override

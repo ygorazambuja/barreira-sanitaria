@@ -16,15 +16,14 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
     if (existentCar == null) {
       final query = '''
       mutation AddNewCar(\$plate: String = "", \$model: String = "") {
-  insert_cars(objects: {model: \$model, plate: \$plate}) {
-    returning {
-      plate
-      model
-    }
-  }
-}
+        insert_cars(objects: {model: \$model, plate: \$plate}) {
+          returning {
+            plate
+            model
+          }
+        }
+      }
         ''';
-
       final response = await hasuraConnect.mutation(
         query,
         variables: {

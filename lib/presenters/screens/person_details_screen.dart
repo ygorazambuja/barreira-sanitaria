@@ -5,6 +5,7 @@ import 'package:barreira_sanitaria/infra/repositories/implementation/register_re
 import 'package:barreira_sanitaria/presenters/components/register_cart_list.dart';
 import 'package:barreira_sanitaria/repository/abstract/person_repository_abstract.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../shared/custom_bottom_app_bar.dart';
 import '../../shared/rectangle_floating_action_button.dart';
@@ -42,9 +43,9 @@ class _PersonDetailsScreenState extends State<PersonDetailsScreen> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              child: StreamBuilder<Person>(
-                  stream: Stream.fromFuture(FetchPersonByCpf(
-                      cpf: widget.cpf, repository: widget.repository)()),
+              child: FutureBuilder<Person>(
+                  future: FetchPersonByCpf(
+                      cpf: widget.cpf, repository: widget.repository)(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       var person = snapshot.data;
@@ -55,7 +56,7 @@ class _PersonDetailsScreenState extends State<PersonDetailsScreen> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 14.0),
+                                const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Card(
                                 child: ListTile(
                               title: Wrap(
@@ -91,17 +92,48 @@ class _PersonDetailsScreenState extends State<PersonDetailsScreen> {
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: Card(
-                              child: ListTile(
-                                title: Wrap(
-                                  children: [
-                                    Text('Telefone: '),
-                                    Text(
-                                      person.phone,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                        child: Wrap(
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(Icons.phone),
+                                          title: Text('Fazer Ligação'),
+                                          onTap: () {
+                                            launch('tel:+55${person.phone}');
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: Icon(Icons.message),
+                                          title: Text('WhatsApp'),
+                                          onTap: () {
+                                            launch(
+                                                'whatsapp://send?phone=+55${person.phone}');
+                                          },
+                                        ),
+                                      ],
+                                    ));
+                                  },
+                                );
+                              },
+                              child: Card(
+                                child: ListTile(
+                                  title: InkWell(
+                                    child: Wrap(
+                                      children: [
+                                        Text('Telefone: '),
+                                        Text(
+                                          person.phone,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),

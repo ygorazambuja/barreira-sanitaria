@@ -69,22 +69,6 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
         title: (cancelFunc) => Text('Registro Inserido com Sucesso'),
         subtitle: (cancelFunc) => Text(insertedRegister),
         contentPadding: const EdgeInsets.all(8));
-    // await showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       content: Text('Registro inserido com o ID: $insertedRegister'),
-    //       actions: [
-    //         FlatButton(
-    //           child: Text('Sair'),
-    //           onPressed: () {
-    //             Navigator.pushNamed(context, '/');
-    //           },
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
 
     Navigator.pop(context);
   }
@@ -96,6 +80,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   }
 
   final _scaffoldState = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +109,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                 ],
               ),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Padding(
@@ -245,6 +232,12 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Campo não pode ser vazio';
+                            }
+                            return null;
+                          },
                           controller: _modelController,
                           decoration: InputDecoration(
                               labelText: 'Modelo do carro',
@@ -284,7 +277,25 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: onSaveClick,
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            if (passengers.isNotEmpty) {
+              onSaveClick();
+            } else {
+              BotToast.showNotification(
+                leading: (cancel) => Icon(
+                  Icons.warning,
+                  color: Colors.redAccent,
+                ),
+                title: (cancelFunc) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                      Text('Não é possivel adicionar um registro sem pessoas'),
+                ),
+              );
+            }
+          }
+        },
         label: Text('Salvar'),
         icon: Icon(Icons.save),
         shape: BeveledRectangleBorder(),

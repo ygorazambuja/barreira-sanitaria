@@ -10,6 +10,7 @@ class StartUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Barreira Sanitaria PG',
       initialRoute: '/',
       builder: BotToastInit(),
       routes: {
