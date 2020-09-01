@@ -52,6 +52,7 @@ class _NewPassengerScreenState extends State<NewPassengerScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          widget.person.cpf = cpfController.text;
           if (_formKey.currentState.validate()) {
             Navigator.pop(context, widget.person);
           }

@@ -11,6 +11,8 @@ class Register {
   List<Person> persons;
   bool isFinalized;
   String reason;
+  String exitLocation;
+  String enterLocation;
 
   Register(
       {@required this.id,
@@ -18,6 +20,8 @@ class Register {
       @required this.exitForecast,
       @required this.occurrenceDate,
       @required this.isFinalized,
+      this.exitLocation,
+      this.enterLocation,
       this.reason,
       this.persons});
 
@@ -29,6 +33,8 @@ class Register {
         '\nCar: ${car.plate} ${car.model}'
         '\nisFinalized: $isFinalized'
         '\nReasons: $reason'
-        '\nPersons: $persons';
+        '\nPersons: $persons'
+        '\nEnter Location: $enterLocation'
+        '\nExit Location: $exitLocation';
   }
 }

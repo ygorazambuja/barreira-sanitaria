@@ -16,24 +16,24 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   Future<List<Register>> getAll() async {
     final query = '''
     subscription {
-  registers {
-    id
-    exitForecast
-    occurrenceDate
-    car {
-      plate
-      model
-    }
-    registers_persons {
-      person {
-        cpf
-        fullName
-        phone
-        traveler
+      registers {
+        id
+        exitForecast
+        occurrenceDate
+        car {
+          plate
+          model
+        }
+        registers_persons {
+          person {
+            cpf
+            fullName
+            phone
+            traveler
+          }
+        }
       }
     }
-  }
-}
     ''';
 
     final response = await hasuraConnect.query(query);
@@ -49,7 +49,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<Register> getRegisterById(String id) async {
     final _query = '''
-      query {
+      query GetRegisterById{
         registers(where: {id: {_eq: "$id"}}) {
         car {
           plate
@@ -60,6 +60,8 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
         id
         occurrenceDate
         reason
+        enterLocation
+        exitLocation
         registers_persons {
           person {
           cpf
@@ -82,7 +84,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<List<CleanRegisterDto>> fetchCleanRegistersDto() async {
     final query = '''
-    query {
+    query FetchCleanRegistersDto{
       registers {
         carPlate
         exitForecast
@@ -106,7 +108,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<List<CleanRegisterDto>> fetchFinalizedCleanRegistersDto() async {
     final query = '''
-    query finalized {
+    query FetchFinalizedCleanRegistersDto {
       registers(where: {isFinalized: {_eq: true}}) {
         id
         exitForecast
@@ -130,7 +132,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<List<CleanRegisterDto>> fetchNonFinalizedCleanRegistersDto() async {
     final query = '''
-    query finalized {
+    query FetchNonFinalizedCleanRegistersDto {
       registers(where: {isFinalized: {_eq: false}}) {
         id
         exitForecast
@@ -152,16 +154,16 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   }
 
   @override
-  Future<int> finalizeRegister(String _eq) async {
+  Future<int> finalizeRegister(String _eq, String exitLocation) async {
     final query = '''
-    mutation MyMutation(\$_eq: uuid) {
-      update_registers(where: {id: {_eq: \$_eq}}, _set: {isFinalized: true}) {
+    mutation FinalizeRegister(\$_eq: uuid, \$exitLocation: String) {
+      update_registers(where: {id: {_eq: \$_eq}}, _set: {isFinalized: true, exitLocation: \$exitLocation}) {
         affected_rows
       }
     }
     ''';
-    final response =
-        await hasuraConnect.mutation(query, variables: {'_eq': _eq});
+    final response = await hasuraConnect
+        .mutation(query, variables: {'_eq': _eq, 'exitLocation': exitLocation});
     final int affectedRows =
         response['data']['update_registers']['affected_rows'];
     return affectedRows;
@@ -170,7 +172,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<String> newRegister(Register register) async {
     final mutation = '''
-        mutation MyMutation(\$objects: [registers_insert_input!]! = {}) {
+        mutation NewRegister(\$objects: [registers_insert_input!]! = {}) {
           insert_registers(objects: \$objects) {
             returning {
               id
@@ -191,10 +193,6 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
 
     return response['data']['insert_registers']['returning'][0]['id']
         .toString();
-
-    // var insertedRegister = await getRegisterById(
-    //     response['data']['insert_registers']['returning']['id'] as String);
-    // return insertedRegister;
   }
 
   @override
@@ -227,7 +225,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Future<List<CleanRegisterDto>> fetchRegistersByPerson(String cpf) async {
     final query = '''
-    query MyQuery(\$_eq: String) {
+    query FetchRegistersByPerson(\$_eq: String) {
       persons(where: {cpf: {_eq: \$_eq}}) {
         registers_persons {
           register {
@@ -257,7 +255,7 @@ class RegisterRepositoryImplementation implements RegisterRepositoryAbstract {
   @override
   Stream<int> lengthNonFinalizedRegister() {
     final subscription = '''
-    subscription MyQuery {
+    subscription LengthNonFinalizedRegister {
       registers(where: {isFinalized: {_eq: false}}) {
         id
         isFinalized

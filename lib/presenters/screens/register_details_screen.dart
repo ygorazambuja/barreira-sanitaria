@@ -3,7 +3,9 @@ import 'package:barreira_sanitaria/presenters/screens/car_details_screen.dart';
 import 'package:barreira_sanitaria/presenters/screens/person_details_screen.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/entities/person.dart';
@@ -34,15 +36,21 @@ class RegisterDetailsScreen extends StatelessWidget {
         scaffoldState: _scaffoldState,
       ),
       drawer: SharedMainDrawer(),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            TitleTop(
-              title: 'Detalhes do Registro',
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10),
+        physics: BouncingScrollPhysics(),
+        child: SafeArea(
+          child: Container(
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                TitleTop(
+                  title: 'Detalhes do Registro',
+                ),
+                _RegisterDetails(repository: repository, registerId: registerId)
+              ],
             ),
-            _RegisterDetails(repository: repository, registerId: registerId)
-          ],
+          ),
         ),
       ),
     );
@@ -111,8 +119,80 @@ class _RegisterDetails extends StatelessWidget {
                   ),
                 ),
               ),
-              register.reason != null || register.reason.trim().isNotEmpty
-                  ? Card(
+              register.enterLocation != null
+                  ? InkWell(
+                      onTap: () {
+                        MapsLauncher.launchCoordinates(
+                            double.parse(
+                                register.enterLocation.split(',').first),
+                            double.parse(
+                                register.enterLocation.split(',').last));
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        elevation: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            leading: Icon(Icons.map),
+                            title: Text('Entrada'),
+                            subtitle: Text('Clique para ver a localização'),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              register.exitLocation != null
+                  ? InkWell(
+                      onTap: () {
+                        MapsLauncher.launchCoordinates(
+                            double.parse(
+                                register.exitLocation.split(',').first),
+                            double.parse(
+                                register.exitLocation.split(',').last));
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        elevation: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            leading: Icon(Icons.map),
+                            title: Text('Saida'),
+                            subtitle: Text('Clique para ver a localização'),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              register.exitForecast != null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        elevation: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: ListTile(
+                            leading: Icon(Icons.schedule),
+                            title: Text(
+                                'Data: ${DateFormat(DateFormat.MONTH_WEEKDAY_DAY, "pt_BR").format(register.exitForecast)}'),
+                            subtitle: Text(
+                                'Horario: ${DateFormat(DateFormat.HOUR24_MINUTE).format(register.exitForecast)}'),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              register.reason == null || register.reason.isEmpty
+                  ? Container()
+                  : Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       elevation: 10,
@@ -123,8 +203,7 @@ class _RegisterDetails extends StatelessWidget {
                             title: Text('Motivos da Visita'),
                             subtitle: Text(register.reason)),
                       ),
-                    )
-                  : Container(),
+                    ),
               register.isFinalized ? Container() : FinalizedButtonStatus(),
               snapshot.hasData && register.persons != null
                   ? PassengerList(
@@ -174,8 +253,12 @@ class FinalizedButtonStatus extends StatelessWidget {
                           icon: Icon(Icons.done),
                           label: Text('Sim'),
                           onPressed: () async {
+                            var position = await Geolocator()
+                                .getCurrentPosition(
+                                    desiredAccuracy: LocationAccuracy.high);
                             await RegisterRepositoryImplementation()
-                                .finalizeRegister(registerId);
+                                .finalizeRegister(registerId,
+                                    '${position.latitude}${position.longitude}');
                             BotToast.showNotification(
                               title: (cancelFunc) =>
                                   Text('Registro foi baixado com sucesso'),

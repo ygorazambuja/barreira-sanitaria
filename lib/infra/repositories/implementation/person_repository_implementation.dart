@@ -66,7 +66,7 @@ class PersonRepositoryImplementation implements PersonRepositoryAbstract {
 
     if (personAux == null) {
       final mutation = '''
-      mutation MyMutation(\$objects: [persons_insert_input!]! = {}) {
+      mutation AddNewPerson(\$objects: [persons_insert_input!]! = {}) {
         insert_persons(objects: \$objects) {
           returning {
             cpf
@@ -101,7 +101,7 @@ class PersonRepositoryImplementation implements PersonRepositoryAbstract {
   @override
   Future<List<Person>> findTravelerByPartialCpf(String cpf) async {
     final query = '''
-    query MyQuery(\$_eq: String) {
+    query FindTravelerByPartialCpf(\$_eq: String) {
       persons(where: {traveler: {_eq: true}, cpf:{_like: "%$cpf%"}}) {
         cpf
         traveler

@@ -42,7 +42,7 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
   @override
   Future<Car> getCarByPlate(String plate) async {
     final query = '''
-    query MyQuery(\$_eq: String = "") {
+    query GetCarByPlate(\$_eq: String = "") {
       cars(where: {plate: {_eq: \$_eq}}) {
         plate
         model
@@ -67,7 +67,7 @@ class CarRepositoryImplementation extends CarRepositoryAbstract {
   @override
   Future<CarWithRegisters> fetchByPlate(String plate) async {
     final query = '''
-    query MyQuery(\$_eq: String = "") {
+    query FetchByPlate(\$_eq: String = "") {
       cars(where: {plate: {_eq: \$_eq}}) {
         registers {
           id

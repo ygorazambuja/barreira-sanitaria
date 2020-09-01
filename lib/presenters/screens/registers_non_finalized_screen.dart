@@ -35,24 +35,29 @@ class _RegisterNonFinalizedScreenState
 class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Text('Registros Sem Baixa',
-                style: TextStyle(fontSize: 34, fontWeight: FontWeight.w300)),
-          ),
-          Expanded(
-            child: RegisterCardListBuilder(
-              usecase: AllNonFinalizedRegistersUsecase(
-                  repository: RegisterRepositoryImplementation())(),
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20),
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(8),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Text(
+                'Registros Sem Baixa',
+                style: TextStyle(fontSize: 34, fontWeight: FontWeight.w300),
+              ),
             ),
-          )
-        ],
+            Expanded(
+              child: RegisterCardListBuilder(
+                usecase: AllNonFinalizedRegistersUsecase(
+                  repository: RegisterRepositoryImplementation(),
+                )(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

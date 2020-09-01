@@ -22,6 +22,11 @@ class RegisterJsonMapper extends Register {
   @override
   String reason;
 
+  @override
+  String exitLocation;
+  @override
+  String enterLocation;
+
   RegisterJsonMapper(
       {this.id,
       this.car,
@@ -29,7 +34,9 @@ class RegisterJsonMapper extends Register {
       this.occurrenceDate,
       this.persons,
       this.reason,
-      this.isFinalized});
+      this.isFinalized,
+      this.exitLocation,
+      this.enterLocation});
 
   Map<String, dynamic> toMap() {
     var carToMap = CarJsonMapper(model: car.model, plate: car.plate).toMap();
@@ -48,24 +55,27 @@ class RegisterJsonMapper extends Register {
       'registers_persons': personsToMap.map((e) => {
             'person': {'data': e}
           }),
-      'isFinalized': isFinalized
+      'isFinalized': isFinalized,
+      'exitLocation': exitLocation,
+      'enterLocation': enterLocation
     };
   }
 
   factory RegisterJsonMapper.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
     return RegisterJsonMapper(
-      id: map['id'],
-      isFinalized: map['isFinalized'],
-      reason: map['reason'],
-      car: CarJsonMapper.fromMap(map['car']),
-      exitForecast: map['exitForecast'] != null
-          ? DateTime.parse(map['exitForecast'])
-          : null,
-      occurrenceDate: DateTime.parse(map['occurrenceDate']),
-      persons: List<Person>.from(map['registers_persons']
-          ?.map((x) => PersonJsonMapper.fromMap(x['person']))),
-    );
+        id: map['id'],
+        isFinalized: map['isFinalized'],
+        reason: map['reason'],
+        car: CarJsonMapper.fromMap(map['car']),
+        exitForecast: map['exitForecast'] != null
+            ? DateTime.parse(map['exitForecast'])
+            : null,
+        occurrenceDate: DateTime.parse(map['occurrenceDate']),
+        persons: List<Person>.from(map['registers_persons']
+            ?.map((x) => PersonJsonMapper.fromMap(x['person']))),
+        enterLocation: map['enterLocation'],
+        exitLocation: map['exitLocation']);
   }
 
   static List<Register> fromJsonList(List list) {

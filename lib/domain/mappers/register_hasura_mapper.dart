@@ -12,6 +12,8 @@ class RegisterHasuraMapper {
           : register.occurrenceDate.toIso8601String(),
       'isFinalized': register.isFinalized,
       'id': register.id,
+      'exitLocation': register.exitLocation,
+      'enterLocation': register.enterLocation
     };
   }
 }

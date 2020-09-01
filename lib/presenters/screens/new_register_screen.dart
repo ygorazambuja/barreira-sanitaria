@@ -3,6 +3,7 @@ import 'package:barreira_sanitaria/infra/repositories/implementation/car_reposit
 import 'package:bot_toast/bot_toast.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -35,6 +36,7 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   final MaskTextInputFormatter plateFormatter = MaskTextInputFormatter(
       mask: '###-####', filter: {'#': RegExp(r'([aA-Z]{0,3})([0-9]{0,})')});
 
+  bool _saveButtonActivate = true;
   bool _isViajante = false;
 
   List<Person> passengers = <Person>[];
@@ -46,6 +48,9 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
   }
 
   void onSaveClick() async {
+    var position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
     final car = Car(
       model: _modelController.text,
       plate: _placaController.text,
@@ -59,6 +64,8 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
       isFinalized: !_isViajante,
       id: Uuid().v4(),
     );
+
+    register.enterLocation = '${position.latitude},${position.longitude}';
 
     final insertedRegister = await NewRegisterUseCase(
       register: register,
@@ -277,9 +284,13 @@ class _NewRegisterScreenState extends State<NewRegisterScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 10,
         onPressed: () {
           if (_formKey.currentState.validate()) {
             if (passengers.isNotEmpty) {
+              setState(() {
+                _saveButtonActivate = false;
+              });
               onSaveClick();
             } else {
               BotToast.showNotification(

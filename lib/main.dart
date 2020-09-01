@@ -10,17 +10,16 @@ class StartUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Barreira Sanitaria PG',
+      title: 'Barreira Sanitaria',
       initialRoute: '/',
       builder: BotToastInit(),
       routes: {
         '/': (context) => HomeScreen(),
       },
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.purple,
-        fontFamily: GoogleFonts.openSans().fontFamily,
-      ),
+          brightness: Brightness.dark,
+          primaryColor: Colors.purple,
+          fontFamily: GoogleFonts.aBeeZee().fontFamily),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

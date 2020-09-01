@@ -26,7 +26,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  json_annotation:
   hasura_connect: 1.2.2+1
   uuid: 2.2.0
   intl: 0.16.1
@@ -38,6 +37,8 @@ dependencies:
   mask_text_input_formatter: 1.0.7
   bot_toast: ^3.0.3
   google_fonts: 1.1.0
+  geolocator: 5.3.2+2
+  maps_launcher: 1.2.1
 
 dev_dependencies:
   flutter_test:
